@@ -1,10 +1,29 @@
 //Toda la parte de red de nuestro componente principal
-import {Router} from 'express';
+const express = require('express')
+const router = express.Router()
 
-const router = Router();
+const response = require('../../../network/response');
+const Controller = require('./index')
 
 router.get('/', function(req, res){
-    res.send('Hola mundo');
+   Controller.list()
+      .then((lista) => {
+        response.success(req, res, lista, 200)
+      })
+      .catch((err) =>{
+        response.success(req, res, lista, 500)
+      })
 });
 
-export default router;
+router.get('/:id', function(req, res){
+    Controller.get(req.params.id)
+       .then((user) => {
+         response.success(req, res, user, 200)
+       })
+       .catch((err) =>{
+         response.success(req, res, user, 500)
+       })
+ });
+ 
+
+module.exports = router
